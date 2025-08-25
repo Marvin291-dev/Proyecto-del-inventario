@@ -165,7 +165,9 @@ def agregar_producto():
     print("✅ Producto agregado exitosamente.")
 
 def agregar_Clientes():
-
+    Nit = int(input("Ingrese el nit: "))
+    if Nit in Clientes:
+        print("Este cliente ya esta regristado")
 while True:
     print("------Bienvenido---------")
     print("1. Agregar Categoria")
