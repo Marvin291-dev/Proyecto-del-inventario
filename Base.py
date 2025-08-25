@@ -144,8 +144,8 @@ def AgregarCategoria():
 
 while True:
     print("------Bienvenido---------")
-    print("1. Agregar Producto")
-    print("2. Agregar Categoria")
+    print("1. Agregar Categoria")
+    print("2. Agregar Producto")
     print("3. Salir")
     opcion = input("Ingrese una opción: ")
 
