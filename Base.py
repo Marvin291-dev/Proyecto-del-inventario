@@ -137,10 +137,6 @@ class DetallesCompras:
 
 #Agregar
 def AgregarCategoria():
-    Idcategoria = input("Ingrese el ID Producto: ")
-    nombre = input("Ingrese el nombre de la categoria: ")
-    categoria[Idcategoria] = Categoria(Idcategoria, nombre)
-    print("Se ingreso la categoria exitosamente")
 
 while True:
     print("------Bienvenido---------")
