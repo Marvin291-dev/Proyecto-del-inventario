@@ -28,7 +28,7 @@ class Productos:
         return f"{self.IdProducto} - {self.Nombre} - Q.{self.Precio} - Q.{self.TotalCompras} - Q.{self.TotalVentas} - {self.Stock}"
 
 class Categoria:
-    def __int__(self, IdCategoria ,Nombre):
+    def __int__(self, IdCategoria, Nombre):
         self.IdCategoria = IdCategoria
         self.Nombre = Nombre
 
@@ -136,7 +136,35 @@ class DetallesCompras:
                 f"Precio: Q{self.PrecioCompras: .2f} | Subtotal: Q{self.subTotal: .2f} | Fecha: {self.FechaCaducidad}")
 
 #Agregar
-def AgregarCategoria():
+def agregar_categoria():
+    IdCategoria = input("Ingrese el ID de la categoría: ")
+    if IdCategoria in categoria:
+        print("Esta categoría ya existe.")
+        return
+    Nombre = input("Ingrese el nombre de la categoría: ")
+    nueva_categoria = Categoria(IdCategoria, Nombre)
+    categoria[IdCategoria] = nueva_categoria
+
+# Función para agregar producto
+def agregar_producto():
+    IdProducto = input("Ingrese el ID del producto: ")
+    Nombre = input("Ingrese el nombre del producto: ")
+    IdCategoria = input("Ingrese el ID de la categoría: ")
+
+    if IdCategoria not in categoria:
+        print("⚠️ La categoría no existe. Agregue la categoría primero.")
+        return
+
+    try:
+        Precio = float(input("Ingrese el precio del producto: "))
+    except ValueError:
+        print("⚠️ Precio inválido. Debe ser un número.")
+        return
+
+    Producto[IdProducto] = Productos(IdProducto, Nombre, IdCategoria, Precio)
+    print("✅ Producto agregado exitosamente.")
+
+def agregar_Clientes():
 
 while True:
     print("------Bienvenido---------")
@@ -146,7 +174,9 @@ while True:
     opcion = input("Ingrese una opción: ")
 
     if opcion == "1":
-        AgregarCategoria()
+        agregar_categoria()
     elif opcion == "2":
+        agregar_producto()
+    elif opcion == "3":
         print("Saliendo...")
         break
