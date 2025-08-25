@@ -143,6 +143,7 @@ def AgregarCategoria():
     print("Se ingreso la categoria exitosamente")
 
 
+
 while True:
     print("------Bienvenido---------")
     print("1. Agregar Categoria")
