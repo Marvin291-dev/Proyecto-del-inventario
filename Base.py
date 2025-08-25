@@ -1,5 +1,5 @@
 Producto = {}
-Categoria = {}
+categoria = {}
 Clientes = {}
 Empleados = {}
 Proveedor = {}
@@ -7,7 +7,7 @@ Ventas = {}
 Compras = {}
 
 class Productos:
-    def __int__(self, IdProducto, Nombre, IdCategoria, Precio = 0, TotalCompras = 0, TotalVentas = 0, Stock = 0):
+    def __int__(self, IdProducto, Nombre, IdCategoria, Precio, TotalCompras = 0, TotalVentas = 0, Stock = 0):
         self.IdProducto = IdProducto
         self.Nombre = Nombre
         self.IdCategoria = IdCategoria
@@ -136,4 +136,21 @@ class DetallesCompras:
                 f"Precio: Q{self.PrecioCompras: .2f} | Subtotal: Q{self.subTotal: .2f} | Fecha: {self.FechaCaducidad}")
 
 #Agregar
-def AgregarProducto():
+def AgregarCategoria():
+    Idcategoria = input("Ingrese el ID Producto: ")
+    nombre = input("Ingrese el nombre de la categoria: ")
+    categoria[Idcategoria] = Categoria(Idcategoria, nombre)
+    print("Se ingreso la categoria exitosamente")
+
+while True:
+    print("------Bienvenido---------")
+    print("1. Agregar Producto")
+    print("2. Agregar Categoria")
+    print("3. Salir")
+    opcion = input("Ingrese una opción: ")
+
+    if opcion == "1":
+        AgregarCategoria()
+    elif opcion == "2":
+        print("Saliendo...")
+        break
