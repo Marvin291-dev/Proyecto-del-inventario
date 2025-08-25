@@ -168,11 +168,38 @@ def agregar_Clientes():
     Nit = int(input("Ingrese el nit: "))
     if Nit in Clientes:
         print("Este cliente ya esta regristado")
+        return
+
+    Nombre = input("Ingrese el nombre del cliente: ")
+    Telefono = int(input("Ingrese el teléfono del cliente: "))
+    Direccion = input("Ingrese la dirección del cliente: ")
+    Correo = input("Ingrese el correo del cliente: ")
+
+    nuevo_Cliente = Clientes(Nit, Nombre, Telefono, Direccion, Correo)
+    Clientes[Nit] = nuevo_Cliente
+    print("Cliente agregado exitosamente.")
+
+def Agregar_Empleados():
+    IdEmpleado = input("Ingrese el ID de la empleado: ")
+    if IdEmpleado in Empleados:
+        print("Este empleado ya existe.")
+        return
+    Nombre = input("Ingrese el nombre del empleado: ")
+    Telefono = int(input("Ingrese el telefono del empleado: "))
+    Direccion = input("Ingrese la dirección del empleado: ")
+    Correo = input("Ingrese el correo del empleado: ")
+
+    nuevo_Empleado = Empleados(IdEmpleado, Nombre, Telefono, Direccion, Correo)
+    Empleados[IdEmpleado] = nuevo_Empleado
+    print("Empleado agregado exitosamente.")
+
 while True:
     print("------Bienvenido---------")
     print("1. Agregar Categoria")
     print("2. Agregar Producto")
-    print("3. Salir")
+    print("3. Agregar Clientes")
+    print("4. Agregar Empleados")
+    print("5. Salir")
     opcion = input("Ingrese una opción: ")
 
     if opcion == "1":
@@ -180,5 +207,7 @@ while True:
     elif opcion == "2":
         agregar_producto()
     elif opcion == "3":
+        agregar_Clientes()
+    elif opcion == "4":
         print("Saliendo...")
         break
