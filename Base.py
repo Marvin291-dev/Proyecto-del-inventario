@@ -184,8 +184,9 @@ def Agregar_Empleados():
     if IdEmpleado in Empleados:
         print("Este empleado ya existe.")
         return
+
     Nombre = input("Ingrese el nombre del empleado: ")
-    Telefono = int(input("Ingrese el telefono del empleado: "))
+    Telefono = int(input("Ingrese el teléfono del empleado: "))
     Direccion = input("Ingrese la dirección del empleado: ")
     Correo = input("Ingrese el correo del empleado: ")
 
@@ -193,13 +194,31 @@ def Agregar_Empleados():
     Empleados[IdEmpleado] = nuevo_Empleado
     print("Empleado agregado exitosamente.")
 
+def Agregar_Proveedor():
+    IdProveedor = input("Ingrese el ID de la proveedor: ")
+    if IdProveedor in Proveedor:
+        print("Este proveedor ya existe.")
+        return
+
+    Nombre = input("Ingrese el nombre del proveedor: ")
+    Empresa = input("Ingrese el nombre de la empresa: ")
+    Telefono = int(input("Ingrese el teléfono del proveedor: "))
+    Direccion = input("Ingrese la dirección del proveedor: ")
+    Correo = input("Ingrese el correo del proveedor: ")
+    IdCategoria = input("Ingrese el ID de la categoría asociada: ")
+
+    Nuevo_Proveedor = Proveedor(IdProveedor, Nombre, Empresa, Telefono, Direccion, Correo, IdCategoria)
+    Proveedor[IdProveedor] = Nuevo_Proveedor
+    print("Proveedor agregado exitosamente.")
+
 while True:
     print("------Bienvenido---------")
     print("1. Agregar Categoria")
     print("2. Agregar Producto")
     print("3. Agregar Clientes")
     print("4. Agregar Empleados")
-    print("5. Salir")
+    print("5. Agregar Proveedor")
+    print("6. Salir")
     opcion = input("Ingrese una opción: ")
 
     if opcion == "1":
@@ -209,5 +228,9 @@ while True:
     elif opcion == "3":
         agregar_Clientes()
     elif opcion == "4":
+        Agregar_Empleados()
+    elif opcion == "5":
+        Agregar_Proveedor()
+    elif opcion == "6":
         print("Saliendo...")
         break
