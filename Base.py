@@ -7,7 +7,7 @@ Ventas = {}
 Compras = {}
 
 class Productos:
-    def __int__(self, IdProducto, Nombre, IdCategoria, Precio, TotalCompras = 0, TotalVentas = 0, Stock = 0):
+    def __init__(self, IdProducto, Nombre, IdCategoria, Precio, TotalCompras = 0, TotalVentas = 0, Stock = 0):
         self.IdProducto = IdProducto
         self.Nombre = Nombre
         self.IdCategoria = IdCategoria
@@ -28,7 +28,7 @@ class Productos:
         return f"{self.IdProducto} - {self.Nombre} - Q.{self.Precio} - Q.{self.TotalCompras} - Q.{self.TotalVentas} - {self.Stock}"
 
 class Categoria:
-    def __int__(self, IdCategoria, Nombre):
+    def __init__(self, IdCategoria, Nombre):
         self.IdCategoria = IdCategoria
         self.Nombre = Nombre
 
@@ -36,7 +36,7 @@ class Categoria:
         return f"{self.IdCategoria} - {self.Nombre}"
 
 class Clientes:
-    def __int__(self, Nit, Nombre, Telefono, Direccion, Correo):
+    def __init__(self, Nit, Nombre, Telefono, Direccion, Correo):
         self.Nit = Nit
         self.Nombre = Nombre
         self.Telefono = Telefono
@@ -47,7 +47,7 @@ class Clientes:
         return f"Nit: {self.Nit} - {self.Nombre} - Telefono: {self.Telefono} - Direccion: {self.Direccion} - Correo: {self.Correo}"
 
 class Empleados:
-    def __int__(self, IdEmpleado, Nombre, Telefono, Direccion, Correo):
+    def __init__(self, IdEmpleado, Nombre, Telefono, Direccion, Correo):
         self.IdEmpleado = IdEmpleado
         self.Nombre = Nombre
         self.Telefono = Telefono
@@ -71,7 +71,7 @@ class Proveedores:
         return f" {self.IdProveedores} - {self.Nombre} - Empresa: {self.Empresa} - Telefono: {self.Telefono} - Direccion: {self.Direccion} - Correo: {self.Correo} - IdCategoria: {self.IdCategoria}"
 
 class Ventas:
-    def __int__(self, IdVentas, Fecha, Cliente, Empleado, Categoria):
+    def __init__(self, IdVentas, Fecha, Cliente, Empleado, Categoria):
         self.IdVentas = IdVentas
         self.Fecha = Fecha
         self.Cliente = Cliente
@@ -207,9 +207,79 @@ def Agregar_Proveedor():
     Correo = input("Ingrese el correo del proveedor: ")
     IdCategoria = input("Ingrese el ID de la categoría asociada: ")
 
-    Nuevo_Proveedor = Proveedor(IdProveedor, Nombre, Empresa, Telefono, Direccion, Correo, IdCategoria)
+    Nuevo_Proveedor = Proveedores(IdProveedor, Nombre, Empresa, Telefono, Direccion, Correo, IdCategoria)
     Proveedor[IdProveedor] = Nuevo_Proveedor
     print("Proveedor agregado exitosamente.")
+
+def AgregarVentas():
+    IdVenta = input("Ingrese el ID de la venta: ")
+    if IdVenta in Ventas:
+        print("Este venta ya existe.")
+        return
+
+    Fecha = input("Ingrese la fecha de la venta: ")
+    Cliente = int(input("Ingrese el nit del cliente: "))
+    Empleado = int(input("Ingrese el Id del empleado: "))
+    Categoria = int(input("Ingrese el ID de la categoria: "))
+
+    if Cliente not in Clientes:
+        print("Este cliente no existe")
+        return
+    if Empleado not in Empleados:
+        print("Este empleado no existe")
+        return
+    if Categoria not in categoria:
+        print("Este categoria no existe")
+        return
+
+    Nuevo_Venta = Ventas(IdVenta, Fecha, Cliente, Empleado, Categoria)
+    Ventas[IdVenta] = Nuevo_Venta
+
+    while True:
+        IdProducto = int(input("Ingrese el ID del producto que se vendió: "))
+        if IdProducto not in Proveedor:
+            break
+        if IdProducto not in Productos:
+            print("Este producto no existe")
+            continue
+        try:
+            cantidad = int(input("Ingrese la cantidad vendida: "))
+        except ValueError:
+            print("La cantidad invalidad")
+        try:
+            Producto[IdProducto].Stock(cantidad, "Ventas")
+            subTotal = Producto[IdProducto].precio * cantidad
+            Nuevo_Venta.Detalles.append(IdProducto, cantidad, subTotal)
+            Nuevo_Venta.Total += subTotal
+        except ValueError as e:
+            print(f"La cantidad invalidad: {e}")
+            continue
+
+    Ventas[IdVenta] = Nuevo_Venta
+    print("Ventas agregada exitosamente.")
+    print(Nuevo_Venta.resumen())
+
+def agregar_compras():
+    IdCompra = input("Ingrese el ID de la compra: ")
+    fecha = input("Ingrese la fecha de la compra: ")
+    proveedor = input("Ingrese el proveedor: ")
+    empleado = input("Ingrese el empleado: ")
+    compra = Compras(IdCompra, fecha, proveedor, empleado)
+
+    Producto = []
+    while True:
+        p = input("Producto (fin): ")
+        if p == "fin": break
+        c = int(input("Cantidad: "))
+        Producto[p].Stock(c, "Compras")
+        precio = Producto[p].precio
+        subtotal = precio * c
+        Producto.append((p, c, precio, subtotal))
+        compra.Total += subtotal
+
+    compra.Detalles = Producto
+    Compras[IdCompra] = compra
+    print(f"Total registrado: Q. {compra.Total: .2}")
 
 while True:
     print("------Bienvenido---------")
@@ -218,7 +288,9 @@ while True:
     print("3. Agregar Clientes")
     print("4. Agregar Empleados")
     print("5. Agregar Proveedor")
-    print("6. Salir")
+    print("6. Agregar Ventas")
+    print("7. Agregar Compras")
+    print("8. Salir")
     opcion = input("Ingrese una opción: ")
 
     if opcion == "1":
@@ -232,5 +304,9 @@ while True:
     elif opcion == "5":
         Agregar_Proveedor()
     elif opcion == "6":
+        AgregarVentas()
+    elif opcion == "7":
+        agregar_compras()
+    elif opcion == "8":
         print("Saliendo...")
         break
