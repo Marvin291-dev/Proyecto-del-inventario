@@ -267,7 +267,6 @@ def agregar_compras():
     empleado = input("Ingrese el empleado: ")
     compra = Compras(IdCompra, fecha, proveedor, empleado)
 
-    Producto = []
     while True:
         p = input("Producto (fin): ")
         if p == "fin": break
