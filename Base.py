@@ -152,17 +152,17 @@ def agregar_producto():
     IdCategoria = input("Ingrese el ID de la categoría: ")
 
     if IdCategoria not in categoria:
-        print("⚠️ La categoría no existe. Agregue la categoría primero.")
+        print("La categoría no existe. Agregue la categoría primero.")
         return
 
     try:
         Precio = float(input("Ingrese el precio del producto: "))
     except ValueError:
-        print("⚠️ Precio inválido. Debe ser un número.")
+        print("Precio inválido. Debe ser un número.")
         return
 
     Producto[IdProducto] = Productos(IdProducto, Nombre, IdCategoria, Precio)
-    print("✅ Producto agregado exitosamente.")
+    print("Producto agregado exitosamente.")
 
 def agregar_Clientes():
     Nit = int(input("Ingrese el nit: "))
