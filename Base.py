@@ -217,7 +217,8 @@ def AgregarVentas():
         print("Este venta ya existe.")
         return
 
-    Fecha = input("Ingrese la fecha de la venta: ")
+    Fecha = input("Ingrese "
+                  "la fecha de la venta: ")
     Cliente = int(input("Ingrese el nit del cliente: "))
     Empleado = int(input("Ingrese el Id del empleado: "))
     Categoria = int(input("Ingrese el ID de la categoria: "))
