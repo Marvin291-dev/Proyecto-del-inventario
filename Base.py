@@ -215,3 +215,20 @@ def AgregarProveedor():
         return
     proveedor[IdProveedor] = Proveedores(IdProveedor, NombreProv, Empresa, TelefonoProv, DireccionProv, CorreoProv, IdCategorias)
     print("Proveedores agregados correctamente")
+
+def RegristarVenta():
+    nit = int(input("Ingresa el Nit: "))
+    IdEmpleado = int(input("Ingresa el ID de Empleado: "))
+    Fecha = input("Ingresa la fecha: ")
+    cliente = clientes.get(nit)
+    empleado = empleados.get(IdEmpleado)
+    if not cliente or not empleado:
+        print("No se al cliente o empleado no existen")
+        return
+    venta = Ventas(len(ventas) + 1, cliente, empleado, Fecha)
+    while True:
+        IdProducto = int(input("Ingresa el ID de producto: "))
+        produc = productos.get(IdProducto)
+        if not produc:
+            print("No se encontro el producto")
+            continue
