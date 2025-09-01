@@ -420,4 +420,49 @@ def cargarEmpleados():
 
 def GuardarVentas():
     with open("Ventas.txt", "w", encoding="utf-8") as archivo:
-        for
+        for Vent in ventas.values():
+            archivo.write(f"{Vent.IdVenta} | {Vent.Fecha} | {Vent.Cliente.Nit} | {Vent.Empleado.IdEmpleado} | {Vent.TotalVentas} | {Vent.Total}")
+
+def cargarVentas():
+    try:
+        with open("Ventas.txt", "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                IdDetalleVenta, Fecha, Nit, IdEmpleado, Total = linea.strip().split(",")
+                cliente = clientes.get(Nit)
+                emplea = empleados.get(IdEmpleado)
+                ven = Venta(int(IdDetalleVenta), Fecha, cliente, emplea)
+                ven.Total = float(Total)
+                ventas.append(ven)
+    except FileNotFoundError:
+        print("Ventas.txt no existe el archivo")
+
+def GuardarProveedores():
+    with open("Proveedores.txt", "w", encoding="utf-8") as archivo:
+        for Provee in proveedor.values():
+            archivo.write(f"{Provee.IdProvee} | {Provee.NombreProvee} | {Provee.Empresa} | {Provee.TelefonoProvee} | {Provee.DireccionProvee} | {Provee.CorreoProvee}")
+
+def cargarProveedores():
+    try:
+        with open("Proveedores.txt", "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                IdProveedor, NombreProveed, Empresa, TelefonoProveed, DireccionProvee, CorreoProvee = linea.strip().split(",")
+                proveedor[int(IdProveedor)] = Proveedor(int(IdProveedor), NombreProveed, Empresa, TelefonoProveed, DireccionProvee, CorreoProvee, IdCategoria, DireccionProvee)
+    except FileNotFoundError:
+        print("Proveedores.txt no existe el archivo")
+
+def GuardarDetallesVenta():
+    with open("DetallesVenta.txt", "w", encoding="utf-8") as archivo:
+        for Venta in ventas:
+            for detella in Venta.Detalles:
+                archivo.write(f"{Venta.IdVenta} | {detella["Producto"].IdProducto} | {detella["Cantidad"]} | {detella["Precio Unitario"]} | {detella["SubTotal"]} | {detella["Descuento"]}\n")
+
+def GuardarCompras():
+    with open("Compras.txt", "w", encoding="utf-8") as archivo:
+        for compra in compras:
+            archivo.write(f"{compra.IdCompra} | {compra.Fecha} | {compra.proveedor.IdProvee} | {compra.TotalVentas} | {compra.Total: .2f}")
+
+def guardardetalleCom():
+    with open("DetallesVenta.txt", "w", encoding="utf-8") as archivo:
+       for compra in compras:
+           for venta in compra.Detalles:
+               archivo.write(f"{compra.IdCompras} | {venta["Producto"].IdProducto} | {venta["Cantidad"]}")
