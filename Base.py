@@ -1,35 +1,35 @@
-categoria = {}
 productos = {}
+categorias = {}
 clientes = {}
 empleados = {}
 proveedor = {}
-oferta = {}
-ventas = []
-compras = []
+ofertas = {}
+ventas = {}
+compras = {}
 
-class Producto:
-    def _init_(self, IdProducto, NombreProd, PrecioProd, IdCategoria, TotalVentas = 0, TotalCompras = 0):
+class Productos:
+    def _init_(self, IdProducto, NombreProduc, PrecioProduc, IdCategoria, TotalVentas = 0, TotalCompras = 0):
         self.IdProducto = IdProducto
-        self.NombreProd = NombreProd
-        self.PrecioProd = PrecioProd
-        self.Stock = 0
+        self.NombreProduc = NombreProduc
+        self.PrecioProduc = PrecioProduc
         self.IdCategoria = IdCategoria
+        self.Stock = 0
         self.TotalVentas = TotalVentas
         self.TotalCompras = TotalCompras
 
-    def Stock(self, Existencia, Tipo):
-        if Tipo == "Compras":
-            self.Stock += Existencia
-        elif Tipo == "Ventas":
-            if Existencia > 0:
-                raise ValueError("Producto insuficiente")
-            self.Stock -= Existencia
-            self.TotalVentas += Existencia
+    def Stock(self, Cantidad, Tipo):
+        if Tipo == 'Compra':
+            self.Stock += Cantidad
+        elif Tipo == 'Venta':
+            if Cantidad > self.Stock:
+                raise ValueError("El producto es insuficiente")
+            self.Stock -= Cantidad
+            self.Stock += Cantidad
 
     def resumen(self):
-        return f"{self.IdProducto} - {self.NombreProd} - {self.PrecioProd} - {self.Stock}"
+        return f"{self.IdProducto} - {self.NombreProduc} - Q.{self.PrecioProduc: .2f} - Stock: {self.Stock}"
 
-class Categoria:
+class Categorias:
     def _init_(self, IdCategoria, NombreCat):
         self.IdCategoria = IdCategoria
         self.NombreCat = NombreCat
@@ -46,189 +46,285 @@ class Clientes:
         self.Correo = Correo
 
     def resumen(self):
-        return (f"Nit: {self.Nit} - {self.NombreClien} - Telefono: {self.Telefono} - Direccion: {self.Direccion}"
-                f"- Correo: {self.Direccion}")
+        return (f"Nit: {self.Nit} - {self.NombreClien} - Telefono: {self.Telefono}"
+                f"- Direccion: {self.Direccion} - Correo: {self.Correo}")
 
 class Empleados:
-    def _init_(self, IdEmpleado, NombreEmple, TelefonoEmple, DireccionEmple,CorreoEmple):
+    def _init_(self, IdEmpleado, NombreEmpleado, TelefonoEmpleado, DireccionEmpleado, CorreoEmpleado):
         self.IdEmpleado = IdEmpleado
-        self.NombreEmple = NombreEmple
-        self.TelefonoEmple = TelefonoEmple
-        self.DireccionEmple = DireccionEmple
-        self.CorreoEmple = CorreoEmple
+        self.NombreEmpleado = NombreEmpleado
+        self.TelefonoEmpleado = TelefonoEmpleado
+        self.DireccionEmpleado = DireccionEmpleado
+        self.CorreoEmpleado = CorreoEmpleado
 
     def resumen(self):
-        return (f"{self.IdEmpleado} - {self.NombreEmple} - Telefono: {self.TelefonoEmple} - Direccion: {self.DireccionEmple}"
-                f"- Correo: {self.DireccionEmple}")
+        return (f"{self.IdEmpleado} - {self.NombreEmpleado} - Telefono: {self.TelefonoEmpleado} "
+                f"Direccion: {self.DireccionEmpleado} - Correo: {self.CorreoEmpleado}")
 
-class Proveedores:
-    def _init_(self, IdProveedor, NombreProv, Empresa, TelefonoProv, DireccionProv, CorreoProv, IdCategoria):
-        self.IdProveedor = IdProveedor
-        self.NombreProv = NombreProv
+class Proveedor:
+    def _init_(self, IdProveedor, NombreProvee, Empresa, TelefonoProvee, DireccionProvee, CorreoProvee, IdCategoria):
+        self.IdProvee = IdProveedor
+        self.NombreProvee = NombreProvee
         self.Empresa = Empresa
-        self.TelefonoProv = TelefonoProv
-        self.DireccionProv = DireccionProv
-        self.CorreoProv = CorreoProv
+        self.TelefonoProvee = TelefonoProvee
+        self.DireccionProvee = DireccionProvee
+        self.CorreoProvee = CorreoProvee
         self.IdCategoria = IdCategoria
 
     def resumen(self):
-        return (f"{self.IdProveedor} - {self.NombreProv} - Empresa: {self.Empresa} - Telefono: {self.TelefonoProv} -"
-                f"- Direccion: {self.DireccionProv} - Correo: {self.CorreoProv} - Producto: {self.IdCategoria}")
+        return (f"{self.IdProvee} - {self.NombreProvee} - Empresa: {self.Empresa} - Telefono: {self.TelefonoProvee} - Direccoin: {self.DireccionProvee}"
+                f"- Correo: {self.CorreoProvee} - Producto: {self.IdCategoria}")
 
-class Ventas:
-    def _init_(self, IdVentas, Fecha, Cliente, Empleado):
-        self.IdVentas = IdVentas
+class Venta:
+    def __init__(self, IdVenta, Fecha, Cliente, Empleado):
+        self.IdVenta = IdVenta
         self.Fecha = Fecha
         self.Cliente = Cliente
         self.Empleado = Empleado
         self.Detalles = []
         self.Total = 0
 
-    def AgregarDetalleVentas(self, Producto, Cantidad, PrecioUnitario, Descuento = 0):
-        Producto.Stock(Cantidad, "Ventas")
-        SubTotal = Cantidad * PrecioUnitario
-        PrecioOr = PrecioUnitario / (1 - Descuento / 100) if Descuento > 0 else PrecioUnitario
-        Ahorro = Cantidad * (PrecioOr - PrecioUnitario)
+    def agregarDetalleVentas(self, Producto, Cantidad, PrecioUnitario, Descuento = 0):
+        Producto.Stock(Cantidad, "Venta")
+        subTotal = Cantidad * PrecioUnitario
+        PrecioOriginal = PrecioUnitario / (1 - Descuento / 100) if Descuento > 0 else PrecioUnitario
+        Ahorro = Cantidad * (PrecioOriginal - PrecioUnitario)
         Detalle = {
             "Producto": Producto,
             "Cantidad": Cantidad,
             "PrecioUnitario": PrecioUnitario,
-            "SubTotal": SubTotal,
+            "Subtotal": subTotal,
             "Descuento": Descuento,
             "Ahorro": Ahorro
         }
         self.Detalles.append(Detalle)
-        self.Total += SubTotal
-        if not hasattr(self, "ahorro.Total"):
-            self.Ahorro_Total = 0
-        self.Ahorro_Total += Ahorro
+        self.Total += subTotal
+        if not hasattr(self, "Ahorro Total"):
+            self.AhorroTotal = 0
+        self.AhorroTotal += subTotal
 
     def resumen(self):
-        return (f"Venta No. {self.IdVentas} | Fecha: {self.Fecha} | Cliente: {self.Cliente} | Empleado: {self.Empleado} |"
-                f"Total: Q. {self.Total:.2f} | Ahorro por Ofertas: Q.{self.Ahorro_Total}")
+        return (f"Venta No: {self.IdVenta} | Fecha: {self.Fecha} | Cliente: {self.Cliente.NombreClien} | Empleado: {self.Empleado.NombreEmpleado} |"
+                f"Total: Q.{self.Total: .2f} | Ahorro por oferta: Q.{self.AhorroTotal: .2f}")
 
-class DetalleVentas:
-    def _init_(self, IdDetalleVenta, IdVentas, Producto, Cantidad):
+class DetallesVentas:
+    def __init__(self, IdDetalleVenta, IdVenta, Producto, Cantidad):
         self.IdDetalleVenta = IdDetalleVenta
-        self.IdVentas = IdVentas
+        self.IdVenta = IdVenta
         self.IdProducto = Producto.IdProducto
         self.Cantidad = Cantidad
         self.Precio = Producto.Precio
         self.SubTotal = self.Precio * self.Cantidad
 
     def resumen(self):
-        return (f"Detalle NO. {self.IdDetalleVenta} | Venta No. {self.IdVentas} | Producto: {self.IdProducto} | Cantidad: {self.Cantidad} |"
-                f"Precio: {self.Precio} | SubTotal: {self.SubTotal:.2f}")
+        return (f"Detalle No: {self.IdDetalleVenta} | Venta No: {self.IdVenta} | Producto: {self.IdProducto} | Cantidad: {self.Cantidad} |"
+                f"Precio: Q.{self.Precio: .2f} | Subtotal: Q.{self.SubTotal: .2f}")
 
 class Compras:
-    def _init_(self, IdCompras, Fecha, IdProveedor, IdEmpleado):
+    def __init__(self, IdCompras, fecha, IdProveedor, idEmpleado):
         self.IdCompras = IdCompras
-        self.Fecha = Fecha
-        self.Proveedor = IdProveedor
-        self.Empleado = IdEmpleado
+        self.fecha = fecha
+        self.IdProveedo = IdProveedor
+        self.idEmpleado = idEmpleado
         self.Detalles = []
         self.Total = 0
 
-    def AgregarDetalleCompras(self, Producto, Cantidad, PrecioUnita, FechaCadu):
+    def agregarDetallesCompras(self , Producto, Cantidad, PrecioUnita, FechaCaducidad):
         Producto.Stock(Cantidad, "Compras")
-        DetalleCompras = DetallesCompras(len(self.IdCompras) + 1, self.IdCompras, Producto, Cantidad, PrecioUnita, FechaCadu)
-        self.Detalles.append(DetalleCompras)
-        self.Total += DetalleCompras.subTotal
+        detalleCompras = DetallesCompras(len(self.Detalles)+1, self.IdCompras, Producto.Id, Cantidad, PrecioUnita, FechaCaducidad)
+        self.Detalles.append(detalleCompras)
+        self.Total += detalleCompras.Subtotal
 
     def resumen(self):
-        return (f"Compra No. {self.IdCompras} | Fecha: {self.Fecha} | Proveedor: {self.Proveedor} | Empleado: {self.Empleado} |"
+        proveedores = proveedor.get(self.IdProveedo)
+        empleado = empleados.get(self.idEmpleado)
+        NombProvee = proveedores.NombrePro if proveedor else "Desconocido"
+        nombreEmple = empleado.NombreEmple if empleado else "Desconocido"
+        return (f"Compra No: {self.IdCompras} | Fecha: {self.fecha} | Proveedorees: {NombProvee} | Empleados: {nombreEmple} |"
                 f"Total: Q.{self.Total:.2f}")
 
 class DetallesCompras:
-    def _init_(self, IdDetalleCompras, IdCompras, IdProducto, Cantidad, PrecioCompra, FechaCadu):
+    def _init_(self, IdDetalleCompras, IdProducto, Cantidad, precioCompra, FechaCaducidad, IdCompras):
         self.IdDetalleCompras = IdDetalleCompras
         self.IdCompras = IdCompras
-        self.Producto = IdProducto
+        self.producto = IdProducto
         self.Cantidad = Cantidad
-        self.PrecioCompra = PrecioCompra
-        self.subTotal = self.PrecioCompra * self.Cantidad
-        self.FechaCadu = FechaCadu
+        self.PrecioCompra = precioCompra
+        self.Subtotal = self.PrecioCompra * self.Cantidad
+        self.FechaCaducidad = FechaCaducidad
 
     def resumen(self):
-        return (f"Compra No. {self.IdDetalleCompras} | Compra No. {self.IdCompra} | Producto Id: {self.IdProducto} | Cantidad : {self.Cantidad}"
-                f"Precio: Q.{self.PrecioCompra:.2f} | SubTotal: {self.subTotal:.2f} | Fecha Caducidad: {self.FechaCadu}")
+        return (f"Detalle No. {self.IdDetalleCompras} | Compra No: {self.IdCompras} | Producto: {self.IdProducto} | Cantidad: {self.Cantidad} |"
+                f"Precio: Q.{self.PrecioCompra:.2f} | Subtotal: Q.{self.Subtotal: .2f} | Fecha: {self.FechaCaducidad} |")
 
-#Agregar cosas
+def cargar():
+    cargarProductos()
+    cargarCategoria()
+    cargarProveedores()
+    cargarClientes()
+    cargarEmpleados()
+    cargarVentas()
+    cargarCompras()
+
 def AgregarCategoria():
-    print("\nAgregar categoria")
-    #IdCategoria = input("Ingresa el ID de categoria: ")
-    IdCategoria = len(categoria) + 1
-    NombreCate = input("Ingresa el nombre del categoria: ")
-    categoria[IdCategoria] = Categoria(IdCategoria, NombreCate)
-    print("Categoria agregada")
+    IdCategoria = len(categorias) + 1
+    NombCat = input("Ingrese el nombre de la categoria: ")
+    categorias[IdCategoria] = Categorias(IdCategoria, NombCat)
+    print("Categoria cargada exitosamente")
 
-def AgregarProducto():
-    IdProducto = input("Ingresa el ID de producto: ")
-    NombreProd = input("Ingresa el nombre del producto: ")
-    PrecioProd = int(input("Ingresa el precio del producto: "))
+def AgregarProductos():
+    IdProducto = len(productos) + 1
+    NombProducto = input("Ingrese el nombre de la producto: ")
+    PrecioProd = int(input("Ingrese el precio de la producto: "))
     print("Categorias disponibles")
-    for a in categoria.values():
+    for a in categorias.values():
         print(a.resumanse())
-
-    IdCategorias = int(input("Ingresa el ID de categoria: "))
-    categorias = categoria.get(IdCategorias)
-    if categorias:
-        print("La categoria no fue encontrada")
+    IdCategoria = int(input("Ingrese el ID de la categoria: "))
+    cate = categorias.get(IdCategoria)
+    if not cate:
+        print("Categoria inexistente")
         return
-    productos[IdProducto] = Producto(IdProducto, NombreProd, PrecioProd, IdCategorias)
+    productos[IdProducto] = Productos(IdProducto, NombProducto, PrecioProd, IdCategoria)
     print("Productos agregados correctamente")
 
-def AgregarCliente():
-    Nit = input("Ingresa el Nit: ")
+def InforCliente():
+    Nit = input("Ingrese el Nit: ")
     if Nit in clientes:
         print("Este nit ya existe")
         return
-    NombreClien = input("Ingresa el nombre del cliente: ")
-    Telefono = input("Ingresa el telefono: ")
-    Direccion = input("Ingresa la direccion: ")
-    Correo = input("Ingresa la correo: ")
-    clientes[Nit] = Clientes(Nit, NombreClien, Telefono, Direccion, Correo)
+    NombreCliente = input("Ingrese el nombre de la cliente: ")
+    Telefono = input("Ingrese el teléfono: ")
+    Direccion = input("Ingrese la direccion: ")
+    Correo = input("Ingrese el correo: ")
+    clientes[Nit] = Clientes(Nit, NombreCliente, Telefono, Direccion, Correo)
     print("Clientes agregados correctamente")
 
-def AgregarEmpleado():
-    IdEmpleado = input("Ingresa el ID de Empleado: ")
-    NombreEmple = input("Ingresa el nombre del Empleado: ")
-    TelefonoEmple = input("Ingresa el telefono: ")
-    DireccionEmple = input("Ingresa la direccion: ")
-    CorreoEmple = input("Ingresa la correo: ")
-    empleados[IdEmpleado] = Empleados(IdEmpleado, NombreEmple, TelefonoEmple, DireccionEmple, CorreoEmple)
+def InforEmpleado():
+    IdEmpleado = len(empleados) + 1
+    NombEmpleado = input("Ingrese el nombre: ")
+    TelefonoEmpleado = input("Ingrese el telefono: ")
+    DireccionEmpleado = input("Ingrese la direccion: ")
+    CorreoEmpleado = input("Ingrese el correo: ")
+    empleados[IdEmpleado] = Empleados(IdEmpleado, NombEmpleado, TelefonoEmpleado, DireccionEmpleado, CorreoEmpleado)
     print("Empleados agregados correctamente")
 
-def AgregarProveedor():
-    IdProveedor = input("Ingresa el ID de Proveedor: ")
-    NombreProv = input("Ingresa el nombre del Proveedor: ")
-    Empresa = input("Ingresa la empresa: ")
-    TelefonoProv = input("Ingresa el telefono: ")
-    DireccionProv = input("Ingresa la direccion: ")
-    CorreoProv = input("Ingresa la correo: ")
-    print("Categiras disponibles")
-    for a in categoria.values():
+def InforProveedores():
+    IdProveedor = len(proveedor) + 1
+    NombProvee = input("Ingrese el nombre: ")
+    Empresa = input("Ingrese el empresa: ")
+    TelefonoProvee = input("Ingrese el telefono: ")
+    DireccionProvee = input("Ingrese la direccion: ")
+    CorreoProvee = input("Ingrese el correo: ")
+    print("Categorias Disponibles")
+    for a in categorias.values():
         print(f"Id: {a.IdCategoria} - Nombre: {a.NombreCat}")
-    IdCategorias = int(input("Ingresa el ID de categorias: "))
-    if IdCategorias not in categoria:
-        print("La categoria no fue encontrada")
+    IdCategoria = int(input("Ingrese el ID de la categoria: "))
+    if IdCategoria in categorias:
+        print("Categoria inexistente")
         return
-    proveedor[IdProveedor] = Proveedores(IdProveedor, NombreProv, Empresa, TelefonoProv, DireccionProv, CorreoProv, IdCategorias)
+    proveedor[IdProveedor] = Proveedor(IdProveedor, NombProvee, Empresa, TelefonoProvee, DireccionProvee, CorreoProvee, IdCategoria)
     print("Proveedores agregados correctamente")
 
-def RegristarVenta():
-    nit = int(input("Ingresa el Nit: "))
-    IdEmpleado = int(input("Ingresa el ID de Empleado: "))
-    Fecha = input("Ingresa la fecha: ")
-    cliente = clientes.get(nit)
+def RegistrarVentas():
+    Nit = input("Ingrese el Nit: ").strip()
+    print("Empleados disponibles")
+    for a in empleados.values():
+        print(f"Id: {a.IdEmpleado} - Nombre: {a.NombreEmpleado}")
+    IdEmpleado = int(input("Ingrese el ID de la categoria: "))
+    Fecha = input("Ingrese la fecha: ")
+    Cliente = clientes.get(Nit)
     empleado = empleados.get(IdEmpleado)
-    if not cliente or not empleado:
-        print("No se al cliente o empleado no existen")
+    if not Cliente or not empleado:
+        print("El empleado o cliente no existe")
         return
-    venta = Ventas(len(ventas) + 1, cliente, empleado, Fecha)
+    venta = Venta(len(ventas) + 1, Fecha, Cliente, empleado)
+    if input("Quiere ingresar una oferta al producto (s/N): ").lower() == "s":
+        RegistrarOfertas()
     while True:
-        IdProducto = int(input("Ingresa el ID de producto: "))
-        produc = productos.get(IdProducto)
-        if not produc:
-            print("No se encontro el producto")
+        IdProducto = int(input("Ingrese el ID de la producto: "))
+        producto = productos.get(IdProducto)
+        if not producto:
+            print("El producto no existe")
             continue
+        Cantidad = int(input("Ingrese la cantidad de ventas: "))
+        PrecioUnitario = producto.PrecioP
+        Descuento = ofertas.get(IdProducto, 0)
+        PrecioFin = PrecioUnitario * (1 - Descuento / 100)
+        print(f"Descuento: {Descuento}%")
+        print(f"Precio con descuento: Q{PrecioFin:.2f}")
+        try:
+            venta.agregarDetalleVentas(producto, Cantidad, PrecioFin, Descuento)
+            print("Productos agregados con descuento correctamente")
+        except ValueError as a:
+            print(f"Error al agregar el producto: {a}")
+        if input("Desea agregar mas productos (s/N): ").lower() == "s":
+            break
+    ventas.append(venta)
+    print(f"Productos agregados correctamente. Total: Q.{venta.Total: .2f}")
+    print(f"Ahorro total por ofertas: Q.{venta.AhorroTotal: .2f}")
+
+def RegistrarOfertas():
+    IdProducto = int(input("Ingrese el ID de la producto: "))
+    producto = productos.get(IdProducto)
+    if not producto:
+        print("El producto no existe")
+        return
+    print(f"Productos seleccionados son: {producto.NombreProducto}")
+    Descuento = float(input("El porcentaje de descuento es (%): "))
+    if Descuento < 0 or Descuento > 100:
+        print("El descuento debe de estar entre 0 a 100")
+        return
+    ofertas[IdProducto] = Descuento
+    print(f"Ofertas registradas: {Descuento}% para los productos: '{producto.NombreProducto}' (Id: {IdProducto})")
+
+def RegistrarCompras():
+    IdProveedor = int(input("Ingrese el ID del proveedor: "))
+    IdEmpleado = int(input("Ingrese el ID del empleado: "))
+    Fecha = input("Ingrese la fecha: ")
+    provee = proveedor.get(IdProveedor)
+    empleado = empleados.get(IdEmpleado)
+    if not provee or not empleado:
+        print("El proveedor o empleado no existe")
+        return
+    compra = Compras(len(compras) + 1, Fecha, IdProveedor, IdEmpleado)
+    while True:
+        IdProducto = int(input("Ingrese el ID de la producto: "))
+        producto = productos.get(IdProducto)
+        if not producto:
+            print("El producto no existe")
+            continue
+        Cantidad = int(input("Ingrese la cantidad de ventas: "))
+        PrecioUnitario = int(input("Ingrese el precio unitario: Q. "))
+        FechaCaducidad = input("La fecha de caducidad del producto es: ")
+        compra.agregarDetallesCompras(producto, Cantidad, PrecioUnitario, FechaCaducidad)
+        print("Productos agregados correctamente")
+        if input("Desea agregar productos (s/N): ").lower() == "s":
+            break
+    compras.append(compra)
+    print(f"Compras agregaa correctamente. Total: Q.{compra.Total: .2f}")
+
+def MostrarCompras():
+    if not compras:
+        print("No hay compras")
+        return
+    for compra in compras:
+        provee = proveedor.get(compra.IdProveedor)
+        emplea = empleados.get(compra.IdEmpleado)
+        nombreProveedor = provee.nombrePro if provee else "Desconocido"
+        nombreEmpleado = emplea.nombreEmp if emplea else "Desconocido"
+        print(f"\nId Commpras: {compra.IdCompras}")
+        print(f"Fecha: {compra.Fecha}")
+        print(f"Proveedor: {nombreProveedor}")
+        print(f"Empleado: {nombreEmpleado}")
+        print(f"Total: {compra.Total: .2f}")
+        print("Detalles: ")
+        for det in compra.Detalles:
+            producto = det.producto
+            NombreProducto = producto.NombreProduc if producto else "Desconocido"
+            print(f" - Producto: {NombreProducto}")
+            print(f" - Cantidad: {det.Cantidad}")
+            print(f" - Precio Unitario: {det.PrecioCompra}")
+            print(f" - SubTotal: {det.Subtotal: .2f}")
+            print(f" - Fecha de Vencimiento: {det.FechaCaducidad}")
+
+def MostrarVentas():
