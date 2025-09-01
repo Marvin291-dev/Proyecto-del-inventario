@@ -121,9 +121,9 @@ class DetallesVentas:
                 f"Precio: Q.{self.Precio: .2f} | Subtotal: Q.{self.SubTotal: .2f}")
 
 class Compras:
-    def __init__(self, IdCompras, fecha, IdProveedor, idEmpleado):
+    def __init__(self, IdCompras, Fecha, IdProveedor, idEmpleado):
         self.IdCompras = IdCompras
-        self.fecha = fecha
+        self.Fecha = Fecha
         self.IdProveedo = IdProveedor
         self.idEmpleado = idEmpleado
         self.Detalles = []
@@ -140,7 +140,7 @@ class Compras:
         empleado = empleados.get(self.idEmpleado)
         NombProvee = proveedores.NombrePro if proveedor else "Desconocido"
         nombreEmple = empleado.NombreEmple if empleado else "Desconocido"
-        return (f"Compra No: {self.IdCompras} | Fecha: {self.fecha} | Proveedorees: {NombProvee} | Empleados: {nombreEmple} |"
+        return (f"Compra No: {self.IdCompras} | Fecha: {self.Fecha} | Proveedorees: {NombProvee} | Empleados: {nombreEmple} |"
                 f"Total: Q.{self.Total:.2f}")
 
 class DetallesCompras:
@@ -328,3 +328,50 @@ def MostrarCompras():
             print(f" - Fecha de Vencimiento: {det.FechaCaducidad}")
 
 def MostrarVentas():
+    if not ventas:
+        print("No hay ventas")
+        return
+    for venta in ventas:
+        print(f"Id Ventas: {venta.IdVenta}")
+        print(f"Fecha: {venta.Fecha}")
+        print(f"Clientes: {venta.Cliente.NombreClien}")
+        print(f"Empleado: {venta.Empleado.NombreEmpleado}")
+        print(f"Total: {venta.Total: .2f}")
+        print("Detalles: ")
+        for det in venta.Detalles:
+            producto = det["producto"]
+            print(f" Producto: {producto.NombreProduc}")
+            print(f" Precio Unitario: {det["PrecioUnitario"]:.2f} ")
+            print(f" Subtotal: {det["Subtotal"]:.2f}")
+            print(f" Descuento aplicado: {det["descuento"]}%")
+
+def ConsultarInven():
+    print(f"Productos registrados: {len(productos)}")
+    if not productos:
+        print("No hay productos")
+        return
+    for produc in productos.values():
+        NombeCategoria =categorias[produc.IdCategoria].NombreCat if produc.IdCategoria in categorias else "Sin Categorias"
+        print(f"Producto: {produc.IdProducto}")
+        print(f"Nombre: {produc.NombreProduc}")
+        print(f"Precio Unitario: Q.{produc.PrecioProduc: .2f}")
+        print(f"Stock: {produc.Stock}")
+        print(f"Categoria: {NombeCategoria}")
+        print(f"Total Compras: {produc.TotalCompras}")
+        print(f"Total ventas: {produc.TotalVentas}")
+
+def GuardarProductos():
+    with open("Productos.txt", "w", encoding="utf-8") as archivo:
+        for prod in productos.values():
+            archivo.write(f"{prod.IdProducto} | {prod.NombreProduc} | {prod.PrecioProduc} | {prod.Stock} | {prod.IdCategoria} | {prod.TotalVentas} | {prod.TotalCompras}")
+
+def cargarProductos():
+    try:
+        with open("Productos.txt", "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                IdProducto, Nombre, Precio, Stock, Cate, Vent, Comp = linea.strip().split(":")
+                producto = Productos(int(IdProducto), Nombre, float(Precio), int(Cate), int(Vent), int(Comp))
+                producto.Stock = int(Stock)
+                producto[int(IdProducto)] = producto
+    except FileNotFoundError:
+        print("Productos.txt no existe el archivo")
