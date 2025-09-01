@@ -375,3 +375,49 @@ def cargarProductos():
                 producto[int(IdProducto)] = producto
     except FileNotFoundError:
         print("Productos.txt no existe el archivo")
+
+def GuardarCategoria():
+    with open("Categorias.txt", "w", encoding="utf-8") as archivo:
+        for Cat in categorias.values():
+            archivo.write(f"{Cat.IdCategoria} | {Cat.NombreCat}")
+
+def cargarCategoria():
+    try:
+        with open("Categorias.txt", "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                IdCategorias, NombreCategorias = linea.strip().split(",")
+                categorias[int(IdCategorias)] = Categorias(int(IdCategorias), NombreCategorias)
+    except FileNotFoundError:
+        print("Categorias.txt no existe el archivo")
+
+def GuardarClientes():
+    with open("Clientes.txt", "w", encoding="utf-8") as archivo:
+        for Clien in clientes.values():
+            archivo.write(f"{Clien.Nit} | {Clien.NombreClien} | {Clien.Telefono} | {Clien.Direccion} | {Clien.Cidade} | {Clien.Correo}")
+
+def cargarClientes():
+    try:
+        with open("Clientes.txt", "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                Nit, NombreClien, TelefonoClien, DireccionClien, CorreoClie = linea.strip().split(",")
+                clientes[Nit] = Clientes(Nit, NombreClien, TelefonoClien, DireccionClien, CorreoClie)
+    except FileNotFoundError:
+        print("Clientes.txt no existe el archivo")
+
+def GuardarEmpleados():
+    with open("Empleados.txt", "w", encoding="utf-8") as archivo:
+        for Emple in empleados.values():
+            archivo.write(f"{Emple.IdEmpleado} | {Emple.NombreEmpleado} | {Emple.TelefonoEmpleado} | {Emple.DireccionEmpleado} | {Emple.CorreoEmpleado}")
+
+def cargarEmpleados():
+    try:
+        with open("Empleados.txt", "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                IdEmpleado, NombreEmple, TelefonoEmple, DireccionEmple, CorreoEmple = linea.strip().split(",")
+                empleados[int(IdEmpleado)] = Empleados(int(IdEmpleado), NombreEmple, TelefonoEmple, DireccionEmple, CorreoEmple)
+    except FileNotFoundError:
+        print("Empleados.txt no existe el archivo")
+
+def GuardarVentas():
+    with open("Ventas.txt", "w", encoding="utf-8") as archivo:
+        for
