@@ -465,4 +465,15 @@ def guardardetalleCom():
     with open("DetallesVenta.txt", "w", encoding="utf-8") as archivo:
        for compra in compras:
            for venta in compra.Detalles:
-               archivo.write(f"{compra.IdCompras} | {venta["Producto"].IdProducto} | {venta["Cantidad"]}")
+               archivo.write(f"{compra.IdCompras} | {venta["Producto"].IdProducto} | {venta["Cantidad"]} | {venta["Precio Unitario"]} | {venta["SubTotal"]} | {venta["Descuento"]}")
+
+def cargarCompras():
+    try:
+        with open("Compras.txt", "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                IdDetalleCompra, Fecha, IdProveedor,Total = linea.strip().split(",")
+                Provee = proveedor.get(IdProveedor)
+                compras[IdDetalleCompra] = Compras(int(IdDetalleCompra), Fecha, Provee, Total)
+
+
+def GuardarTodos():
