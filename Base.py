@@ -472,7 +472,7 @@ def cargarCompras():
         with open("Compras.txt", "r", encoding="utf-8") as archivo:
             for linea in archivo:
                 IdDetalleCompra, Fecha, IdProveedor,Total = linea.strip().split(",")
-                Provee = proveedor.get(IdProveedor)
+                Provee = proveedor.get(int(IdProveedor))
                 compras[IdDetalleCompra] = Compras(int(IdDetalleCompra), Fecha, Provee, Total)
 
 
